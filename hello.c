@@ -14,17 +14,19 @@ int main(int argc, char* args[]) {
         fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
         return 1;
     }
-    SDL_Window *window = SDL_CreateWindow("Hello World!",
-        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN
-    );
-    if (window == NULL) {
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+    if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
+                                    0, &window, &renderer) != 0) {
         fprintf(stderr, "could not create window: %s\n", SDL_GetError());
         return 1;
     }
-    SDL_Surface *surface = SDL_GetWindowSurface(window);
 
-    SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0x00, 0x00, 0xFF));
+    SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+    SDL_RenderDrawLine(renderer, 0, 0, 200, 200);
+    SDL_RenderPresent(renderer);
 
     SDL_UpdateWindowSurface(window);
     SDL_Delay(5000);
