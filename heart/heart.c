@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     // process program arguments
     if (argc > 1) {
         if (strcmp(argv[1], "-s") == 0) {
-            fprintf(stderr, "Using software rendering");
+            fprintf(stderr, "Using software rendering\n");
             renderer_flags = SDL_RENDERER_SOFTWARE;
         }
     }
