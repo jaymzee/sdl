@@ -8,9 +8,6 @@
 
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 1000
-
-#define WIDTH 1000
-#define HEIGHT 1000
 #define SCREEN_CENTERX (SCREEN_WIDTH / 2)
 #define SCREEN_CENTERY (SCREEN_HEIGHT / 2)
 #define RADIUS 450
@@ -42,31 +39,54 @@ void draw(SDL_Renderer *renderer, double factor)
     }
 }
 
-int main(int argc, char* args[])
+int main(int argc, char *argv[])
 {
+    SDL_Window *window = NULL;
+    SDL_Renderer *renderer = NULL;
+    int renderer_flags = SDL_RENDERER_ACCELERATED;
     double factor = 1.0;
+
+    if (argc > 1) {
+        if (strcmp(argv[1], "-s") == 0) {
+            fprintf(stderr, "Using software rendering");
+            renderer_flags = SDL_RENDERER_SOFTWARE;
+        }
+    }
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "could not initialize sdl2: %s\n", SDL_GetError());
         return 1;
     }
-    SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
-    if (SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT,
-                                    0, &window, &renderer) != 0) {
-        fprintf(stderr, "could not create window: %s\n", SDL_GetError());
+    window = SDL_CreateWindow(
+        "Heart",
+        SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        SCREEN_WIDTH, SCREEN_HEIGHT,
+        SDL_WINDOW_SHOWN
+    );
+    if (!window) {
+        fprintf(stderr, "Create Window:%s\n", SDL_GetError());
+        return 1;
+    }
+    renderer = SDL_CreateRenderer(window, -1, renderer_flags);
+    if (!renderer) {
+        fprintf(stderr, "Create Renderer:%s\n", SDL_GetError());
         return 1;
     }
 
-    SDL_SetWindowTitle(window, "Heart");
-
-    for (int i = 0; i < 300; i++) {
+    while (1) {
+        SDL_Event e;
+        if (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                break;
+            }
+        }
         draw(renderer, factor);
         SDL_RenderPresent(renderer);
         //SDL_Delay(1000.0 / FPS);
         factor += 0.001;
     }
 
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
     return 0;
