@@ -41,6 +41,11 @@ void DrawText(SDL_Renderer *renderer,
     SDL_FreeSurface(surface);
 }
 
+void DrawInit(SDL_Renderer *renderer)
+{
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+}
+
 // draw draws one frame of a multiplication table for the factor
 // given on a circle of connected points.
 void DrawFrame(SDL_Renderer *renderer, double factor)
@@ -51,7 +56,7 @@ void DrawFrame(SDL_Renderer *renderer, double factor)
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 64);
     for (int n = 0; n < POINTS; n++) {
         n1 = n;
         n2 = factor * n1;
@@ -75,23 +80,22 @@ int main(int argc, char *argv[])
     SDL_Window *window = NULL;
     SDL_Renderer *renderer = NULL;
     int renderer_flags = SDL_RENDERER_ACCELERATED;
-    double factor = 1.0;
 
     // process program arguments
     if (argc > 1) {
         if (strcmp(argv[1], "-s") == 0) {
-            fprintf(stderr, "Using software rendering\n");
+            fprintf(stderr, "using software rendering\n");
             renderer_flags = SDL_RENDERER_SOFTWARE;
         }
     }
 
     // Initialize SDL and create a winodw, renderer, and font
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        fprintf(stderr, "SDL_Init: %s\n", SDL_GetError());
+        fprintf(stderr, "SDL Init: %s\n", SDL_GetError());
         return 1;
     }
     if (TTF_Init() < 0) {
-        printf("TTF_Init: %s\n", TTF_GetError());
+        printf("TTF Init: %s\n", TTF_GetError());
         return 1;
     }
     window = SDL_CreateWindow(
@@ -111,11 +115,13 @@ int main(int argc, char *argv[])
     }
     Sans18 = TTF_OpenFont("DejaVuSans.ttf", 18);
     if (Sans18 == NULL) {
-        fprintf(stderr, "%s\n", TTF_GetError());
+        fprintf(stderr, "Open Font: %s\n", TTF_GetError());
         return 1;
     }
 
-    // rendering loop
+    double factor = 1.0;
+    // main rendering loop
+    DrawInit(renderer);
     while (1) {
         SDL_Event e;
         if (SDL_PollEvent(&e)) {
