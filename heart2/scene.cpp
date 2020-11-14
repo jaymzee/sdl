@@ -20,7 +20,7 @@ Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
         fprintf(stderr, "Open Font: %s\n", TTF_GetError());
         exit(1);
     }
-    //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 
 // Draw draws one frame of the scene
@@ -32,7 +32,7 @@ void Scene::Draw()
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 128);
     for (int n = 0; n < POINTS; n++) {
         n1 = n;
         n2 = factor * n1;
@@ -47,6 +47,14 @@ void Scene::Draw()
             (SCREEN_CENTER_X - x2), (SCREEN_CENTER_Y - y2)
         );
     }
+
+    // there is a bug where a single pixel is appearing on the bottom right
+    // of the text drawn. The two lines below work around it by making the
+    // last drawn color the background and alpha 0.
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+    SDL_RenderDrawPoint(renderer, 0, 0);
+
+    // draw text overlay
     sprintf(buf, "factor: %6.3f", factor);
     DrawText(renderer, buf, 10, 10, sans18, Yellow);
 }
