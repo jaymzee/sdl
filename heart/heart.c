@@ -29,7 +29,7 @@ TTF_Font* Sans18 = NULL;
 //   - a texture from that surface
 //   - renders the texture
 void DrawText(SDL_Renderer *renderer,
-              char *str, int x, int y,
+              int x, int y, char *str,
               TTF_Font *font, SDL_Color color)
 {
     SDL_Rect rect = {x, y, 0, 0};
@@ -72,7 +72,7 @@ void DrawFrame(SDL_Renderer *renderer, double factor)
         );
     }
     sprintf(buf, "factor: %6.3f", factor);
-    DrawText(renderer, buf, 10, 10, Sans18, Yellow);
+    DrawText(renderer, 10, 10, buf, Sans18, Yellow);
 }
 
 int main(int argc, char *argv[])

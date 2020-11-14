@@ -6,4 +6,4 @@
 //   - creates surface
 //   - a texture from that surface
 //   - renders the texture
-void DrawText(SDL_Renderer *r, char *s, int x, int y, TTF_Font *f, SDL_Color c);
+void DrawText(SDL_Renderer *r, int x, int y, char *s, TTF_Font *f, SDL_Color c);

@@ -56,7 +56,7 @@ void Scene::Draw()
 
     // draw text overlay
     sprintf(buf, "factor: %6.3f", factor);
-    DrawText(renderer, buf, 10, 10, sans18, Yellow);
+    DrawText(renderer, 10, 10, buf, sans18, Yellow);
 }
 
 // Loop is the event loop for the scene
