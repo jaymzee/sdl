@@ -16,7 +16,7 @@ class Scene {
     double factor_;
     TTF_Font *sans18_;
     void Init_(SDL_Window *window, SDL_Renderer *renderer);
-    void Draw_(SDL_Window *window, SDL_Renderer *renderer);
+    void Draw_(SDL_Window *window, SDL_Renderer *renderer) const;
 public:
     void Loop(SDL_Window *window, SDL_Renderer *renderer);
 };

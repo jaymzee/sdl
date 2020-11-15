@@ -46,7 +46,7 @@ void Scene::Init_(SDL_Window *window, SDL_Renderer *renderer)
 }
 
 // Draw draws one frame of the scene
-void Scene::Draw_(SDL_Window *window, SDL_Renderer *renderer)
+void Scene::Draw_(SDL_Window *window, SDL_Renderer *renderer) const
 {
     double n1, n2, theta, phi;
     double x1, y1, x2, y2;
