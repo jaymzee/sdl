@@ -42,9 +42,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    Scene scene{};
     try {
-        Scene scene(window, renderer);
-        scene.Loop();
+        scene.Loop(window, renderer);
     } catch (const char *err) {
         fprintf(stderr, "scene loop: %s\n", err);
     }

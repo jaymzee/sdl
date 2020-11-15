@@ -13,12 +13,10 @@
 #define PI 3.14159265358979323846
 
 class Scene {
-    double factor;
-    TTF_Font *sans18;
-    SDL_Window *window;
-    SDL_Renderer *renderer;
+    double factor_;
+    TTF_Font *sans18_;
+    void Init_(SDL_Window *window, SDL_Renderer *renderer);
+    void Draw_(SDL_Window *window, SDL_Renderer *renderer);
 public:
-    Scene(SDL_Window *window, SDL_Renderer *renderer);
-    void Draw();
-    void Loop();
+    void Loop(SDL_Window *window, SDL_Renderer *renderer);
 };

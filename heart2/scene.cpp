@@ -1,5 +1,4 @@
-// Heart
-// times tables displayed graphically
+// Heart2: times tables displayed graphically
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -9,21 +8,45 @@
 #include "colors.h"
 #include "text.h"
 
-// Init initializes the scene
-Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
-: window{window}, renderer{renderer}
+// Loop is the event loop for the scene
+void Scene::Loop(SDL_Window *window, SDL_Renderer *renderer)
 {
-    factor = FACT_INIT;
-    sans18 = TTF_OpenFont("DejaVuSans.ttf", 18);
-    if (sans18 == NULL) {
-        throw TTF_GetError();
+    Init_(window, renderer);
+    for (bool running = true; running; ) {
+        // respond to events
+        SDL_Event e;
+        while (SDL_PollEvent(&e)) {
+            switch (e.type) {
+            case SDL_QUIT:
+                printf("Quit\n");
+                running = false;
+                break;
+            }
+        }
+
+        // draw a single frame of the scene
+        Draw_(window, renderer);
+        SDL_RenderPresent(renderer);
+        SDL_Delay(1000.0 / FPS);
+
+        // update scene
+        factor_ += FACT_INCR;
     }
+}
+
+// init initializes the scene
+void Scene::Init_(SDL_Window *window, SDL_Renderer *renderer)
+{
+    factor_ = FACT_INIT;
+    sans18_ = TTF_OpenFont("DejaVuSans.ttf", 18);
+    if (sans18_ == NULL)
+        throw TTF_GetError();
     SDL_SetWindowTitle(window, "Heart2");
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 
 // Draw draws one frame of the scene
-void Scene::Draw()
+void Scene::Draw_(SDL_Window *window, SDL_Renderer *renderer)
 {
     double n1, n2, theta, phi;
     double x1, y1, x2, y2;
@@ -34,7 +57,7 @@ void Scene::Draw()
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 128);
     for (int n = 0; n < POINTS; n++) {
         n1 = n;
-        n2 = factor * n1;
+        n2 = factor_ * n1;
         theta = 2 * PI * n1 / POINTS;
         phi = 2 * PI * n2 / POINTS;
         x1 = RADIUS * cos(theta);
@@ -54,30 +77,6 @@ void Scene::Draw()
     SDL_RenderDrawPoint(renderer, 0, 0);
 
     // draw text overlay
-    sprintf(buf, "factor: %6.3f", factor);
-    DrawText(renderer, 10, 10, buf, sans18, Yellow);
-}
-
-// Loop is the event loop for the scene
-void Scene::Loop() {
-    for (bool running = true; running; ) {
-        // respond to events
-        SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            switch (e.type) {
-            case SDL_QUIT:
-                printf("Quit\n");
-                running = false;
-                break;
-            }
-        }
-
-        // draw a single frame of the scene
-        Draw();
-        SDL_RenderPresent(renderer);
-        SDL_Delay(1000.0 / FPS);
-
-        // update scene
-        factor += FACT_INCR;
-    }
+    sprintf(buf, "factor: %6.3f", factor_);
+    DrawText(renderer, 10, 10, buf, sans18_, Yellow);
 }
