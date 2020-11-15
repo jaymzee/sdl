@@ -11,15 +11,14 @@
 
 // Init initializes the scene
 Scene::Scene(SDL_Window *window, SDL_Renderer *renderer)
+: window{window}, renderer{renderer}
 {
     factor = FACT_INIT;
-    this->window = window;
-    this->renderer = renderer;
     sans18 = TTF_OpenFont("DejaVuSans.ttf", 18);
     if (sans18 == NULL) {
-        fprintf(stderr, "Open Font: %s\n", TTF_GetError());
-        exit(1);
+        throw TTF_GetError();
     }
+    SDL_SetWindowTitle(window, "Heart2");
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 }
 

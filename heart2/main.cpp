@@ -27,23 +27,27 @@ int main(int argc, char *argv[])
         return 1;
     }
     window = SDL_CreateWindow(
-        "Heart",
+        "initializing SDL",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT,
         SDL_WINDOW_SHOWN
     );
     if (!window) {
-        fprintf(stderr, "Create Window:%s\n", SDL_GetError());
+        fprintf(stderr, "Create Window: %s\n", SDL_GetError());
         return 1;
     }
     renderer = SDL_CreateRenderer(window, -1, renderer_flags);
     if (!renderer) {
-        fprintf(stderr, "Create Renderer:%s\n", SDL_GetError());
+        fprintf(stderr, "Create Renderer: %s\n", SDL_GetError());
         return 1;
     }
 
-    Scene scene(window, renderer);
-    scene.Loop();
+    try {
+        Scene scene(window, renderer);
+        scene.Loop();
+    } catch (const char *err) {
+        fprintf(stderr, "scene loop: %s\n", err);
+    }
 
     // Cleanup and exit
     SDL_DestroyRenderer(renderer);
