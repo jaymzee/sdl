@@ -5,7 +5,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <stdio.h>
-#include "colors.h"
 
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 1000
@@ -15,6 +14,9 @@
 #define FPS 1000
 #define POINTS 500
 #define PI 3.14159265358979323846
+
+const SDL_Color Yellow  = {255, 255,   0, 255};
+const SDL_Color Green   = {0,   255,   0, 255};
 
 // fonts are global because it makes it easier to add multiple new fonts
 // without breaking the interface. They exist for the entire *lifetime
@@ -137,7 +139,6 @@ int main(int argc, char *argv[])
     }
 
     // Cleanup and exit
-    // DestroyFont(Sans18) ??
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

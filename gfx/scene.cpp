@@ -6,7 +6,12 @@
 #include <stdio.h>
 #include "scene.h"
 #include "color.h"
-#include "colors.h"
+
+const SDL_Color White   = {255, 255, 255, 255};
+const SDL_Color Red     = {255,   0,   0, 255};
+const SDL_Color Yellow  = {255, 255,   0, 255};
+const SDL_Color Green   = {0,   255,   0, 255};
+const SDL_Color Cyan    = {0,   255, 255, 255};
 
 // Loop is the event loop for the scene
 void Scene::Loop(SDL_Window *window, SDL_Renderer *renderer)
