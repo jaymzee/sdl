@@ -2,7 +2,7 @@
 #include <SDL2/SDL_ttf.h>
 #include "text.h"
 
-// drawText renders a string to screen coordinates x and y in the
+// DrawText renders a string to screen coordinates x and y in the
 // font and color given.  It is a convenience method that
 //   - creates surface
 //   - a texture from that surface
