@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Initialize SDL and create a winodw, renderer, and font
+    // Initialize SDL and create a window and renderer
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "SDL Init: %s\n", SDL_GetError());
         return 1;
@@ -42,6 +42,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    // render the scene until user quits
     Scene scene{};
     try {
         scene.Loop(window, renderer);
