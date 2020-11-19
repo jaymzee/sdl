@@ -22,17 +22,17 @@ int DrawText(SDL_Renderer *renderer, Sint16 x, Sint16 y, char *str,
     texture = SDL_CreateTextureFromSurface(renderer, surface);
     if (texture == NULL)
         goto textureD;
-    if (SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h) < 0)
-        goto cleanup;
+    if (SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h))
+        goto fail;
     if (color.a < 255) {
-        if (SDL_SetTextureAlphaMod(texture, color.a) < 0)
-            goto cleanup;
+        if (SDL_SetTextureAlphaMod(texture, color.a))
+            goto fail;
     }
-    if (SDL_RenderCopy(renderer, texture, NULL, &rect) < 0)
-        goto cleanup;
+    if (SDL_RenderCopy(renderer, texture, NULL, &rect))
+        goto fail;
 
     err = 0;
-cleanup:
+fail:
     SDL_DestroyTexture(texture);
 textureD:
     SDL_FreeSurface(surface);

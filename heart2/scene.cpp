@@ -80,5 +80,7 @@ void Scene::Draw_(SDL_Window *window, SDL_Renderer *renderer) const
 
     // draw text overlay
     sprintf(buf, "factor: %6.3f", factor_);
-    DrawText(renderer, 10, 10, buf, sans18_, Yellow);
+    if (DrawText(renderer, 10, 10, buf, sans18_, Yellow)) {
+        throw SDL_GetError();
+    }
 }
