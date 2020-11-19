@@ -5,7 +5,7 @@
 #include <SDL2/SDL2_framerate.h>
 #include <stdio.h>
 #include "scene.h"
-#include "color.h"
+#include "color.hpp"
 
 const SDL_Color White   = {255, 255, 255, 255};
 const SDL_Color Red     = {255,   0,   0, 255};
@@ -72,13 +72,13 @@ void Scene::Draw(SDL_Window *window, SDL_Renderer *renderer) const
         lineColor(renderer,
             (SCREEN_CENTER_X - x1), (SCREEN_CENTER_Y - y1),
             (SCREEN_CENTER_X - x2), (SCREEN_CENTER_Y - y2),
-            Color(Green)
+            uint32(Green)
         );
     }
 
     // draw text overlay
     sprintf(buf, "factor: %6.3f", factor_);
-    stringColor(renderer, 10, 10, buf, Color(Yellow));
+    stringColor(renderer, 10, 10, buf, uint32(Yellow));
 }
 
 void Scene::Tick()

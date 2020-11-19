@@ -54,9 +54,9 @@ void Scene::Draw(SDL_Window *window, SDL_Renderer *renderer) const
     SDL_RenderClear(renderer);
 
     // draw scene
-    for (int h = 0; h < 4; h++) {
-        char code = Encode7segment((counter_ >> h * 4) & 0xF, h == 0);
-        Draw7segment(renderer, 250 - h*50, 100, code, Green);
+    for (int i = 0; i < 4; i++) {
+        char code = Encode7segment((counter_ >> i * 4) & 0xF, i == 0);
+        Draw7segment(renderer, 250 - i*50, 100, code, Green);
     }
 
     // draw text overlay

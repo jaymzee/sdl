@@ -4,7 +4,7 @@
 extern "C" {
 #endif
 
-inline Uint32 Color(SDL_Color c)
+static inline Uint32 uint32(SDL_Color c)
 {
     return c.a << 24 | c.b << 16 | c.g << 8 | c.r;
 }

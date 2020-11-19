@@ -1,11 +1,15 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
 #include "seg7.h"
-#include "color.h"
+#include "color.hpp"
 
-static const SDL_Color White    = {255, 255, 255, 255};
-static const SDL_Color DarkGray = { 48,  48,  48, 255};
+static const SDL_Rect Border = {0, 0, 50, 75};
 
+static const SDL_Color BorderColor = { 16,  16,  16, 255};
+static const SDL_Color FillColor   = { 16,  16,  16, 255};
+static const SDL_Color LedOffColor = { 48,  48,  48, 255};
+
+// led polygons
 static const Sint16 Ax[6] = {18, 37, 40, 36, 19, 16};
 static const Sint16 Ay[6] = { 9,  9, 12, 14, 14, 12};
 
@@ -27,30 +31,54 @@ static const Sint16 Fy[6] = {34, 14, 12, 15, 32, 35};
 static const Sint16 Gx[6] = {17, 33, 37, 33, 15, 12};
 static const Sint16 Gy[6] = {33, 33, 36, 39, 39, 36};
 
-static const Sint16 * const vx[7] = {Ax, Bx, Cx, Dx, Ex, Fx, Gx};
-static const Sint16 * const vy[7] = {Ay, By, Cy, Dy, Ey, Fy, Gy};
+static const SDL_Point Pv = {41, 60};   // location of decimal point
+static const int Pr       = 3;          // radius of decimal point
 
+// compose each led into an array for x and y
+static const Sint16 * const Vx[7] = {Ax, Bx, Cx, Dx, Ex, Fx, Gx};
+static const Sint16 * const Vy[7] = {Ay, By, Cy, Dy, Ey, Fy, Gy};
+
+// Draw the seven-segment led onto the renderer surface
 int Draw7segment(SDL_Renderer *rend, Uint16 x, Uint16 y, Uint8 b, SDL_Color c)
 {
-    SDL_Rect vpsave, vp = {x, y, 50, 75};
-    SDL_RenderGetViewport(rend, &vpsave);
-    SDL_RenderSetViewport(rend, &vp);
-    Uint32 ledOn = Color(c), ledOff = Color(DarkGray);
+    // return -1 on errors, 0 on success
     int err = -1;
+    // precompute these colors
+    Uint32 on = uint32(c);
+    Uint32 off = uint32(LedOffColor);
 
-//    if (rectangleColor(rend, 0, 0, 50, 75, Color(White)) < 0)
-//       goto fail;
+    // calculate new viewport
+    SDL_Rect vp = Border;
+    vp.x = x;
+    vp.y = y;
+
+    // fill shape with background color (erase it)
+    SDL_Color fill = FillColor;
+    if (SDL_SetRenderDrawColor(rend, fill.r, fill.g, fill.b, fill.a))
+        return err;
+    if (SDL_RenderFillRect(rend, &vp))
+        return err;
+
+    // save the current viewport and set the new one
+    SDL_Rect vpsave;
+    SDL_RenderGetViewport(rend, &vpsave);
+    if (SDL_RenderSetViewport(rend, &vp))
+        goto fail;
+
+    // draw border
+    if (rectangleColor(rend, 0, 0, vp.w, vp.h, uint32(BorderColor)))
+       goto fail;
 
     for (int i = 0; i < 8; i++) {
-        Uint32 led = ledOff;
+        Uint32 led = off;
         if ((b >> i) & 1) {
-            led = ledOn;
+            led = on;
         }
         if (i < 7) {
-            if (filledPolygonColor(rend, vx[i], vy[i], 6, led) < 0)
+            if (filledPolygonColor(rend, Vx[i], Vy[i], 6, led))
                 goto fail;
         } else {
-            if (filledCircleColor(rend, 41, 60, 3, led) < 0)
+            if (filledCircleColor(rend, Pv.x, Pv.y, Pr, led))
                 goto fail;
         }
     }
