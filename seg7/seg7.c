@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL2_gfxPrimitives.h>
-#include "7segment.h"
+#include "seg7.h"
 #include "color.h"
 
 static const SDL_Color White    = {255, 255, 255, 255};

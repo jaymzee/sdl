@@ -5,9 +5,8 @@
 #include <SDL2/SDL2_framerate.h>
 #include <stdio.h>
 #include "scene.h"
-#include "color.h"
-#include "encode7.h"
-#include "7segment.h"
+#include "seg7.h"
+#include "seg7enc.h"
 
 const SDL_Color Black   = {  0,   0,   0, 255};
 const SDL_Color White   = {255, 255, 255, 255};

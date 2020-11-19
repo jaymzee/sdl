@@ -2,8 +2,8 @@ CXX = g++
 CFLAGS = -O2 -std=c++11 -pedantic -Wall
 LFLAGS = -lSDL2 -lSDL2_gfx
 
-segment: main.cpp scene.cpp 7segment.c encode7.c
+seg7: main.cpp scene.cpp seg7.c seg7enc.c
 	$(CXX) $(CFLAGS) -o $@ $^ $(LFLAGS)
 
 clean:
-	rm -f segment
+	rm -f seg7

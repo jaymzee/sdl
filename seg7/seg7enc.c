@@ -1,4 +1,4 @@
-#include "encode7.h"
+#include "seg7enc.h"
 
 static char encode[16] = {
     0077,   // 0
