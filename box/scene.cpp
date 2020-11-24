@@ -17,14 +17,37 @@ const SDL_Color Yellow  = {255, 255,   0, 255};
 const SDL_Color Green   = {0,   255,   0, 255};
 
 Scene::Scene() :
-matrix{
+theta{0.0},
+world{
     {1.0, 0.0, 0.0, 0.0},
     {0.0, 1.0, 0.0, 0.0},
     {0.0, 0.0, 1.0, 0.0},
-    {0.0, 0.0, 0.0, 1.0},
+    {0.0, 0.0, 1.0, 1.0}
 },
-vector{50.0, 0.0, 0.0, 1.0}
-{}
+vlist{
+    {0, 0, 0, 1},
+    {1, 0, 0, 1},
+    {1, 1, 0, 1},
+    {0, 1, 0, 1},
+    {0, 0, 1, 1},
+    {1, 0, 1, 1},
+    {1, 1, 1, 1},
+    {0, 1, 1, 1}
+},
+edge{
+    {0, 1}, // 0
+    {1, 2}, // 1
+    {2, 3}, // 2
+    {3, 0}, // 3
+    {4, 5}, // 4
+    {5, 6}, // 5
+    {6, 7}, // 6
+    {7, 4}, // 7
+    {0, 4}, // 8
+    {1, 5}, // 9
+    {2, 6}, // 10
+    {3, 7}  // 11
+} {}
 
 // Loop is the event loop for the scene
 void Scene::Loop(SDL_Window *window, SDL_Renderer *renderer)
@@ -54,13 +77,12 @@ void Scene::Loop(SDL_Window *window, SDL_Renderer *renderer)
 // Init initializes the scene
 void Scene::Init(SDL_Window *window, SDL_Renderer *renderer)
 {
-    counter_ = 0;
     SDL_SetWindowTitle(window, "box");
     double theta = 0.1;
-    matrix[0][0] = cos(theta);
-    matrix[0][1] = -sin(theta);
-    matrix[1][0] = sin(theta);
-    matrix[1][1] = cos(theta);
+    world[0][0] = cos(theta);
+    world[0][1] = -sin(theta);
+    world[1][0] = sin(theta);
+    world[1][1] = cos(theta);
 }
 
 // Draw draws one frame of the scene
@@ -71,21 +93,26 @@ void Scene::Draw(SDL_Window *window, SDL_Renderer *renderer) const
     SDL_RenderClear(renderer);
 
     // draw scene
-    __m128 v = vector;
-    lineColor(renderer,
-        SCREEN_CX, SCREEN_CY,
-        SCREEN_CX + v[0], SCREEN_CY - v[1], uint32(Green));
+
+    for (int i = 0; i < 12; i++) {
+        __m128 v1 = m4x4v_SSE4(world, vlist[edge[i][0]]);
+        v1 /= v1[3];
+        __m128 v2 = m4x4v_SSE4(world, vlist[edge[i][1]]);
+        v2 /= v2[3];
+        lineColor(renderer,
+            SCREEN_CX + v1[0], SCREEN_CY - v1[1],
+            SCREEN_CX + v2[0], SCREEN_CY - v2[1], uint32(Green));
+    }
 
     // draw text overlay
-    char buf[256];
-    sprint_4s(buf, vector);
-    printf("%s\n", buf);
-    stringColor(renderer, 10, 10, buf, uint32(Yellow));
 }
 
 void Scene::Tick()
 {
     // update scene
-    counter_++;
-    vector = m4x4v_SSE4(matrix, vector);
+    theta+=0.1;
+    world[0][0] = 100 * cos(theta);
+    world[0][1] = 100 * -sin(theta);
+    world[1][0] = 100 * sin(theta);
+    world[1][1] = 100 * cos(theta);
 }

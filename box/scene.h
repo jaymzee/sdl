@@ -7,9 +7,10 @@
 #define FPS 4
 
 class Scene {
-    int counter_;
-    __m128 matrix[4];
-    __m128 vector;
+    double theta;
+    __m128 world[4];
+    __m128 vlist[8];
+    int edge[12][2];
     void Init(SDL_Window *window, SDL_Renderer *renderer);
     void Draw(SDL_Window *window, SDL_Renderer *renderer) const;
     void Tick();
