@@ -1,20 +1,10 @@
-#include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include "draw.h"
 #include "lua.h"
 
-//const SDL_Color Red = {255, 0, 0, 255};
-//const SDL_Color Green = {0, 255, 0, 255};
-//const SDL_Color Blue = {0, 0, 255, 255};
 const SDL_Color Yellow = {255, 255, 0, 255};
-//const SDL_Color Cyan = {0, 255, 255, 255};
-//const SDL_Color Magenta = {255, 0, 255, 255};
-//const SDL_Color White = {255, 255, 255, 255};
-//const SDL_Color LightGray = {170, 170, 170, 255};
-//const SDL_Color DarkGray = {85, 85, 85, 255};
 
 extern SDL_Renderer *renderer;
 extern TTF_Font *default_font;
