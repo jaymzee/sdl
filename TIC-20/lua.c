@@ -1,18 +1,16 @@
 #include <lualib.h>
 #include <lauxlib.h>
-#include <SDL2/SDL.h>
-#include "text.h"
+#include "screen.h"
 #include "lua.h"
 
-extern SDL_Renderer *renderer;
-extern TTF_Font *default_font;
+extern struct Screen screen;
 
 static int clear(lua_State *L)
 {
     unsigned int c = luaL_checknumber(L, 1);
 
-    SDL_SetRenderDrawColor(renderer, c >> 24, (c >> 16) & 0xff, (c >> 8) & 0xff, c & 0xff);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(screen.renderer, c >> 24, c >> 16, c >> 8, c);
+    SDL_RenderClear(screen.renderer);
 
     return 0;    // number of results
 }
@@ -21,7 +19,7 @@ static int pencolor(lua_State *L)
 {
     unsigned int c = luaL_checknumber(L, 1);
 
-    SDL_SetRenderDrawColor(renderer, c >> 24, (c >> 16) & 0xff, (c >> 8) & 0xff, c & 0xff);
+    SDL_SetRenderDrawColor(screen.renderer, c >> 24, c >> 16, c >> 8, c);
 
     return 0;   // number of results
 }
@@ -31,11 +29,9 @@ static int text(lua_State *L)
     double x = luaL_checknumber(L, 1);
     double y = luaL_checknumber(L, 2);
     const char *s = luaL_checkstring(L, 3);
-    unsigned int c = luaL_checknumber(L, 4);
+    unsigned int color = luaL_checknumber(L, 4);
 
-    SDL_Color color = {c >> 24 & 0xff, c >> 16 & 0xff, c >> 8 & 0xff, c & 0xff};
-
-    DrawText(renderer, x, y, s, default_font, color);
+    DrawText(screen.renderer, x, y, s, screen.font, color);
 
     return 0;   // number of results
 }
@@ -48,14 +44,14 @@ static int line(lua_State *L)
     double x2 = luaL_checknumber(L, 3);
     double y2 = luaL_checknumber(L, 4);
 
-    SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
+    SDL_RenderDrawLine(screen.renderer, x1, y1, x2, y2);
 
     return 0;   // number of results
 }
 
 static int flip(lua_State *L)
 {
-    SDL_RenderPresent(renderer);
+    SDL_RenderPresent(screen.renderer);
 
     return 0;   // number of results
 }

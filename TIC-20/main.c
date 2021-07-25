@@ -3,8 +3,7 @@
 #include "screen.h"
 #include "lua.h"
 
-TTF_Font *default_font = NULL;
-SDL_Renderer *renderer = NULL;
+struct Screen screen = { NULL, NULL, 0x00ff00ff };
 
 int main(int argc, char *argv[])
 {
@@ -37,13 +36,13 @@ int main(int argc, char *argv[])
         fprintf(stderr, "Create Window:%s\n", SDL_GetError());
         return 1;
     }
-    renderer = SDL_CreateRenderer(window, -1, renderer_flags);
-    if (!renderer) {
+    screen.renderer = SDL_CreateRenderer(window, -1, renderer_flags);
+    if (!screen.renderer) {
         fprintf(stderr, "Create Renderer:%s\n", SDL_GetError());
         return 1;
     }
-    default_font = TTF_OpenFont("DejaVuSans.ttf", 18);
-    if (default_font == NULL) {
+    screen.font = TTF_OpenFont("DejaVuSans.ttf", 18);
+    if (screen.font == NULL) {
         fprintf(stderr, "Open Font: %s\n", TTF_GetError());
         return 1;
     }
@@ -52,7 +51,7 @@ int main(int argc, char *argv[])
     dofile(luafile);
 
     // Cleanup and exit
-    SDL_DestroyRenderer(renderer);
+    SDL_DestroyRenderer(screen.renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 
