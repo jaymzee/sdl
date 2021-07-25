@@ -1,21 +1,22 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include "colors.h"
 #include "screen.h"
 #include "lua.h"
+#include "colors.h"
 
 struct Screen *screen = NULL;
 
 int main(int argc, char *argv[])
 {
-    const char *luafile = "main.lua";
+    const char *filename = "main.lua";
 
     // process program arguments
     if (argc > 1) {
-        luafile = argv[1];
+        filename = argv[1];
     }
 
     // Initialize SDL
+    fprintf(stderr, "Initializing SDL\n");
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         fprintf(stderr, "SDL Init: %s\n", SDL_GetError());
         return 1;
@@ -24,18 +25,26 @@ int main(int argc, char *argv[])
         fprintf(stderr, "TTF Init: %s\n", TTF_GetError());
         return 1;
     }
-
-    screen = CreateScreen(GREEN, SDL_RENDERER_ACCELERATED);
+    fprintf(stderr, "Create Screen (windowed mode)\n");
+    screen = CreateScreen(LIGHT_GRAY, SDL_RENDERER_ACCELERATED);
     if (!screen) {
-        fprintf(stderr, "CreateScreen failed.");
+        fprintf(stderr, "Create Screen failed.");
         return 1;
     }
 
-    dofile(luafile);
+    // execute lua file
+    fprintf(stderr, "Executing %s\n", filename);
+    int exitcode = LuaMain(filename);
+    if (exitcode) {
+        fprintf(stderr, "%s\n", GetLuaError());
+    } else {
+        fprintf(stderr, "Shutting down\n");
+    }
 
-    // Cleanup and exit
+    // cleanup and exit
     DestroyScreen(screen);
     SDL_Quit();
 
-    return 0;
+    // return the exit code that lua returned
+    return exitcode;
 }

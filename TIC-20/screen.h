@@ -7,8 +7,6 @@
 
 #define MAX_FONTS 1
 
-struct Screen;
-
 struct Screen *CreateScreen(uint32_t pencolor, uint32_t flags);
 void DestroyScreen(struct Screen *);
 

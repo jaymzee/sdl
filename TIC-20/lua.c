@@ -4,6 +4,7 @@
 #include "screen.h"
 
 extern struct Screen *screen;
+static const char *error = NULL;
 
 static int clear(lua_State *L)
 {
@@ -64,13 +65,13 @@ static int delay(lua_State *L)
     return 0;   // number of results
 }
 
-void dofile(const char *filename)
+int LuaMain(const char *filename)
 {
     // Create new Lua state and load the lua libraries
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
 
-    //Expose the swap function to the lua environment
+    // Expose the C functions to the lua environment
     lua_pushcfunction(L, clear);
     lua_setglobal(L, "clear");
     lua_pushcfunction(L, pencolor);
@@ -85,5 +86,16 @@ void dofile(const char *filename)
     lua_setglobal(L, "delay");
 
     // Tell Lua to execute a lua file
-    luaL_dofile(L, filename);
+    int exitcode = luaL_dofile(L, filename);
+    if (exitcode != LUA_OK) {
+        // save error message
+        error = luaL_checkstring(L, -1);
+    }
+
+    return exitcode;
+}
+
+// retreive saved error message
+const char *GetLuaError(void) {
+    return error;
 }
