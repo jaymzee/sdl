@@ -1,25 +1,24 @@
 #include <lualib.h>
 #include <lauxlib.h>
-#include "screen.h"
 #include "lua.h"
+#include "screen.h"
 
-extern struct Screen screen;
+extern struct Screen *screen;
 
 static int clear(lua_State *L)
 {
-    unsigned int c = luaL_checknumber(L, 1);
+    unsigned int color = luaL_checknumber(L, 1);
 
-    SDL_SetRenderDrawColor(screen.renderer, c >> 24, c >> 16, c >> 8, c);
-    SDL_RenderClear(screen.renderer);
+    ClearScreen(screen, color);
 
     return 0;    // number of results
 }
 
 static int pencolor(lua_State *L)
 {
-    unsigned int c = luaL_checknumber(L, 1);
+    unsigned int color = luaL_checknumber(L, 1);
 
-    SDL_SetRenderDrawColor(screen.renderer, c >> 24, c >> 16, c >> 8, c);
+    SetPenColor(screen, color);
 
     return 0;   // number of results
 }
@@ -31,7 +30,7 @@ static int text(lua_State *L)
     const char *s = luaL_checkstring(L, 3);
     unsigned int color = luaL_checknumber(L, 4);
 
-    DrawText(screen.renderer, x, y, s, screen.font, color);
+    DrawText(screen, x, y, s, 0, color);
 
     return 0;   // number of results
 }
@@ -44,14 +43,14 @@ static int line(lua_State *L)
     double x2 = luaL_checknumber(L, 3);
     double y2 = luaL_checknumber(L, 4);
 
-    SDL_RenderDrawLine(screen.renderer, x1, y1, x2, y2);
+    DrawLine(screen, x1, y1, x2, y2);
 
     return 0;   // number of results
 }
 
 static int flip(lua_State *L)
 {
-    SDL_RenderPresent(screen.renderer);
+    Flip(screen);
 
     return 0;   // number of results
 }
@@ -59,7 +58,8 @@ static int flip(lua_State *L)
 static int delay(lua_State *L)
 {
     unsigned int msec = luaL_checknumber(L, 1);
-    SDL_Delay(msec);
+
+    Delay(msec);
 
     return 0;   // number of results
 }
