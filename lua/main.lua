@@ -1,5 +1,6 @@
 function main()
 	print("Hello from lua!")
+	clear(0x0000ffff)
 	pencolor(0x00ff00ff)
 	line(10, 40, 200, 100)
 	pencolor(0xff0000ff)

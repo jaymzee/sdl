@@ -8,13 +8,12 @@ SDL_Renderer *renderer = NULL;
 
 int main(int argc, char *argv[])
 {
+    const char *luafile = "main.lua";
+
     // process program arguments
     int renderer_flags = SDL_RENDERER_ACCELERATED;
     if (argc > 1) {
-        if (strcmp(argv[1], "-s") == 0) {
-            fprintf(stderr, "using software rendering\n");
-            renderer_flags = SDL_RENDERER_SOFTWARE;
-        }
+        luafile = argv[1];
     }
 
     // Initialize SDL
@@ -50,7 +49,7 @@ int main(int argc, char *argv[])
     }
     //SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
-    dofile("main.lua");
+    dofile(luafile);
 
     // Cleanup and exit
     SDL_DestroyRenderer(renderer);
